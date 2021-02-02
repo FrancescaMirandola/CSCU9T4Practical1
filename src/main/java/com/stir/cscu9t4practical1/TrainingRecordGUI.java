@@ -17,6 +17,12 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JTextField mins = new JTextField(2);
     private JTextField secs = new JTextField(2);
     private JTextField dist = new JTextField(4);
+    private JTextField training = new JTextField(15);
+    private JTextField terrain = new JTextField(10);
+    private JTextField tempo = new JTextField(4);
+    private JTextField where = new JTextField(10);
+    private JTextField repetitions = new JTextField(4);
+    private JTextField recovery = new JTextField(4);
     private JLabel labn = new JLabel(" Name:");
     private JLabel labd = new JLabel(" Day:");
     private JLabel labm = new JLabel(" Month:");
@@ -25,9 +31,15 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JLabel labmm = new JLabel(" Mins:");
     private JLabel labs = new JLabel(" Secs:");
     private JLabel labdist = new JLabel(" Distance (km):");
+    private JLabel labtraining = new JLabel("Training:");
+    private JLabel labterrain = new JLabel("Terrain:");
+    private JLabel labtempo = new JLabel("Tempo:");
+    private JLabel labwhere = new JLabel("Where:");
+    private JLabel labrepetitions= new JLabel("Repetitions:");
+    private JLabel labrecovery = new JLabel("Recovery:");
     private JButton addR = new JButton("Add");
     private JButton lookUpByDate = new JButton("Look Up");
-
+    private JButton findAllByDate = new JButton("Find all by date"); //adding new button to jframe
     private TrainingRecord myAthletes = new TrainingRecord();
 
     private JTextArea outputArea = new JTextArea(5, 50);
@@ -43,6 +55,9 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         add(labn);
         add(name);
         name.setEditable(true);
+        add(labtraining);
+        add(training);
+        training.setEditable(true);
         add(labd);
         add(day);
         day.setEditable(true);
@@ -64,10 +79,27 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         add(labdist);
         add(dist);
         dist.setEditable(true);
+        add(labterrain);
+        add(terrain);
+        terrain.setEditable(true);
+        add(labtempo);
+        add(tempo);
+        tempo.setEditable(true);
+        add(labwhere);
+        add(where);
+        where.setEditable(true);
+        add(labrepetitions);
+        add(repetitions);
+        repetitions.setEditable(true);
+        add(labrecovery);
+        add(recovery);
+        recovery.setEditable(true);
         add(addR);
         addR.addActionListener(this);
         add(lookUpByDate);
         lookUpByDate.addActionListener(this);
+        add(findAllByDate);                        //adding button "Find all by date" to the GUI
+        findAllByDate.addActionListener(this);  //registering the button as a listener
         add(outputArea);
         outputArea.setEditable(false);
         setSize(720, 200);
@@ -88,6 +120,9 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         if (event.getSource() == lookUpByDate) {
             message = lookupEntry();
         }
+        if (event.getSource() == findAllByDate){
+            message = lookupEntry();
+        }
         outputArea.setText(message);
         blankDisplay();
     } // actionPerformed
@@ -95,7 +130,7 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     public String addEntry(String what) {
         String message = "Record added\n";
         System.out.println("Adding "+what+" entry to the records");
-        String n = name.getText();
+        String n =name.getText();
         int m = Integer.parseInt(month.getText());
         int d = Integer.parseInt(day.getText());
         int y = Integer.parseInt(year.getText());
@@ -117,8 +152,10 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         return message;
     }
 
+
     public void blankDisplay() {
         name.setText("");
+        training.setText(" ");
         day.setText("");
         month.setText("");
         year.setText("");
@@ -126,6 +163,11 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         mins.setText("");
         secs.setText("");
         dist.setText("");
+        terrain.setText("");
+        tempo.setText("");
+        where.setText("");
+        repetitions.setText("");
+        recovery.setText("");
 
     }// blankDisplay
     // Fills the input fields on the display for testing purposes only
