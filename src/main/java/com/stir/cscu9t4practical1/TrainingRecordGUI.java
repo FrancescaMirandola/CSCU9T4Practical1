@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import java.lang.Number;
 
 public class TrainingRecordGUI extends JFrame implements ActionListener {
@@ -17,12 +18,12 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JTextField mins = new JTextField(2);
     private JTextField secs = new JTextField(2);
     private JTextField dist = new JTextField(4);
-    private JTextField training = new JTextField(15);
     private JTextField terrain = new JTextField(10);
     private JTextField tempo = new JTextField(4);
     private JTextField where = new JTextField(10);
     private JTextField repetitions = new JTextField(4);
     private JTextField recovery = new JTextField(4);
+    private JTextField trainingtext = new JTextField(10);
     private JLabel labn = new JLabel(" Name:");
     private JLabel labd = new JLabel(" Day:");
     private JLabel labm = new JLabel(" Month:");
@@ -40,6 +41,10 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
     private JButton addR = new JButton("Add");
     private JButton lookUpByDate = new JButton("Look Up");
     private JButton findAllByDate = new JButton("Find all by date"); //adding new button to jframe
+    String trainings[]= { "Sprints","Swimming","Cycle"};
+    private JList training= new JList(trainings);
+
+
     private TrainingRecord myAthletes = new TrainingRecord();
 
     private JTextArea outputArea = new JTextArea(5, 50);
@@ -56,8 +61,12 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         add(name);
         name.setEditable(true);
         add(labtraining);
+        add(trainingtext);
+        training.setSelectionMode(ListSelectionModel.SINGLE_SELECTION ); //
+        training.addListSelectionListener(this::valueChanged);
         add(training);
-        training.setEditable(true);
+        training.setSize(10,15);
+
         add(labd);
         add(day);
         day.setEditable(true);
@@ -129,8 +138,9 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
 
     public String addEntry(String what) {
         String message = "Record added\n";
-        System.out.println("Adding "+what+" entry to the records");
-        String n =name.getText();
+        System.out.println("Adding " + what + " entry to the records");
+        //
+        String n = name.getText();
         int m = Integer.parseInt(month.getText());
         int d = Integer.parseInt(day.getText());
         int y = Integer.parseInt(year.getText());
@@ -138,11 +148,35 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         int h = Integer.parseInt(hours.getText());
         int mm = Integer.parseInt(mins.getText());
         int s = Integer.parseInt(secs.getText());
-        Entry e = new Entry(n, d, m, y, h, mm, s, km);
-        myAthletes.addEntry(e);
-        return message;
-    }
-    
+        int rep;
+        int rec;
+        String location;
+        String ter;
+        String temp;
+        //
+        Entry sprint;
+        Entry swimming;
+        Entry cycle;
+        //
+        if (training.isSelectedIndex(0)) {
+            rep = Integer.parseInt(repetitions.getText());
+            rec = Integer.parseInt(recovery.getText());
+            sprint = new SprintEntry(n, d, m, y, h, mm, s, km, rep, rec);
+            myAthletes.addEntry(sprint);
+        } else if (training.isSelectedIndex(1)) {
+            location = where.getText();
+            swimming = new SwimEntry(n, d, m, y, h, mm, s, km, location);
+            myAthletes.addEntry(swimming);
+        } else {
+            ter = terrain.getText();
+            temp = tempo.getText();
+            cycle = new CycleEntry(n, d, m, y, h, mm, s, km, ter, temp);
+            myAthletes.addEntry(cycle);
+        }
+                return message;
+            }
+
+
     public String lookupEntry() {
         int m = Integer.parseInt(month.getText());
         int d = Integer.parseInt(day.getText());
@@ -152,10 +186,33 @@ public class TrainingRecordGUI extends JFrame implements ActionListener {
         return message;
     }
 
+    public void valueChanged(ListSelectionEvent e) { {
+            if (training.isSelectedIndex(0)) {
+                trainingtext.setText("Sprint");
+                where.setEditable(false);
+                terrain.setEditable(false);
+                tempo.setEditable(false);
+            }
+            else if (training.isSelectedIndex(1)){
+                trainingtext.setText("Swim");
+                repetitions.setEditable(false);
+                terrain.setEditable(false);
+                tempo.setEditable(false);
+                recovery.setEditable(false);
+            }
+            else{
+                trainingtext.setText("Cycle");
+                repetitions.setEditable(false);
+                where.setEditable(false);
+                recovery.setEditable(false);
+            }
+
+        }
+    }
 
     public void blankDisplay() {
         name.setText("");
-        training.setText(" ");
+        trainingtext.setText(" ");
         day.setText("");
         month.setText("");
         year.setText("");
